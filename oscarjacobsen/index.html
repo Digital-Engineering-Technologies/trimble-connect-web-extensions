@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <h2>OJ - TC-Addon</h2>
+    <h2>DET - TC-Extensions</h2>
     <!--<input type="text" id="change">-->
     <button onclick="setViewerTransparency()">Opacity 50%</button>
     <button onclick="getViewerModels()">ViewerModels</button>
@@ -37,28 +37,6 @@
     <button onclick="doPsets()">GO: Psets</button>
 
     <script>
-
-
-
-        const mainMenuObject = {
-            title: "OJ - TC-Addon",
-            icon: "https://oscarjacobsen.no/trimble-connect-addon/favicon.png",
-            command: "main_nav_menu_cliked",
-            subMenus: [
-                {
-                    title: "IFC-Tool",
-                    icon: "https://oscarjacobsen.no/trimble-connect-addon/submenu_1.png",
-                    command: "submenu_1_clicked",
-                },
-                {
-                    title: "DWG-Tool",
-                    icon: "https://oscarjacobsen.no/trimble-connect-addon/submenu_2.png",
-                    command: "submenu_2_clicked",
-                },
-            ],
-        };
-
-
         <!---->
 
         TrimbleConnectWorkspace.connect(
@@ -421,43 +399,6 @@
             })
             return ""
         }
-
-
-
-        dotConnect().then((WorkspaceAPI) => {
-
-            // Setting ui menu
-            WorkspaceAPI.ui.setMenu(mainMenuObject)
-
-            // Printing project info
-            WorkspaceAPI.project.getCurrentProject().then((projectInfo) => {
-
-                var pro = document.getElementById("project-info")
-                pro.innerHTML = JSON.stringify(projectInfo)
-                console.log(projectInfo)
-            })
-
-            // Getting 
-            WorkspaceAPI.extension.getPermission("accesstoken").then((accessToken) => {
-                //Current user access token or status: accessToken
-                var token = document.getElementById("access-token")
-                token.innerHTML = JSON.stringify(accessToken)
-                console.log(accessToken)
-
-            });
-
-            WorkspaceAPI.user.getUser().then((connectUser) => {
-                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
-            })
-
-            WorkspaceAPI.extension.getUser().then((connectUser) => {
-                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
-            })
-
-            console.log(300396)
-        })
-
-        console.log(22)
 
 
 
