@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Oscar Jacobsen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>OJ - TC-Addon</title>
+    <link rel="icon" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./favicon.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Web site created using create-react-app">
+    <script src="https://components.connect.trimble.com/trimble-connect-workspace-api/index.js"></script>
+</head>
+
+<body>
+    <h2>OJ - TC-Addon</h2>
+    <!--<input type="text" id="change">-->
+    <button onclick="setViewerTransparency()">Opacity 50%</button>
+    <button onclick="getViewerModels()">ViewerModels</button>
+    <button onclick="removeSectionPlanes()">removeSectionPlanes</button>
+    <button onclick="getObjects()">consoleGetObjects</button>
+    <button onclick="getSelectionData()">consoleSelectionData</button>
+    
+    <h2>Project Information</h2>
+    <div id="project-info"></div>
+    <h2>Extention Access-Token</h2>
+    <div id="access-token"></div>
+    <h2>User</h2>
+    <div id="connect-user"></div>
+    <div id="console-log"></div>
+    <button onclick="getObjectsColor()">getObjectsColor</button>
+    <button onclick="doMmi20()">GO: MMI-2.0</button>
+    <button onclick="doPsets()">GO: Psets</button>
+
+    <script>
+
+
+
+        const mainMenuObject = {
+            title: "OJ - TC-Addon",
+            icon: "https://oscarjacobsen.no/trimble-connect-addon/favicon.png",
+            command: "main_nav_menu_cliked",
+            subMenus: [
+                {
+                    title: "IFC-Tool",
+                    icon: "https://oscarjacobsen.no/trimble-connect-addon/submenu_1.png",
+                    command: "submenu_1_clicked",
+                },
+                {
+                    title: "DWG-Tool",
+                    icon: "https://oscarjacobsen.no/trimble-connect-addon/submenu_2.png",
+                    command: "submenu_2_clicked",
+                },
+            ],
+        };
+
+
+        <!---->
+
+        TrimbleConnectWorkspace.connect(
+                window.parent,
+                (event, args) => {
+                    switch (event) {
+                        case "extension.command":
+                            //"Command executed by the user: args.data"
+
+                            if (args.data == "submenu_1_clicked"){
+                                console.log("Submenu1 PUSHED")
+                            } else if (args.data == "submenu_2_clicked"){
+                                console.log("Submenu2 PUSHED")
+                            } else {
+                                console.log("Mainmenu0 PUSHED")
+                            }
+
+                            break;
+                        case "extension.accessToken":
+                            //"Accestoken or status: args.data"
+                            break;
+                        case "extension.userSettingsChanged":
+                            //"User settings changed!"
+                            break;
+                        default:
+                    }
+                },
+                30000
+            );
+
+        async function dotConnect() {
+            return await TrimbleConnectWorkspace.connect(
+                window.parent,
+                (event, args) => {
+                    switch (event) {
+                        case "extension.command":
+                            //"Command executed by the user: args.data"
+                            break;
+                        case "extension.accessToken":
+                            //"Accestoken or status: args.data"
+                            break;
+                        case "extension.userSettingsChanged":
+                            //"User settings changed!"
+                            break;
+                        default:
+                    }
+                },
+                30000
+            );
+        }
+
+        function setViewerTransparency(opacity) {
+            dotConnect().then((WorkspaceAPI) => {
+                return WorkspaceAPI.viewer.setOpacity(50)
+            })
+        }
+
+        function removeSectionPlanes() {
+            dotConnect().then((WorkspaceAPI) => {
+                return WorkspaceAPI.viewer.removeSectionPlanes()
+            })
+        }
+
+        function doMmi20(){
+
+            dotConnect().then((WorkspaceAPI)=>{
+
+                WorkspaceAPI.viewer.getObjects().then((viewerObjects)=>{
+
+                    console.log(viewerObjects)
+
+                    
+                    for (let i = 0; i < viewerObjects.length; i++){
+
+                        console.log(viewerObjects[i].properties)
+                    }
+                    
+                    //console.log(viewerObjects.properties())
+
+                })
+
+            })
+
+        }
+
+        let x = ""
+
+        async function getProperties(props){
+            console.log("waiting for variable");
+            while(props == "undefined") // define the condition as you like
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                            
+
+                console.log("variable is defined");
+                console.log(props)
+        }
+
+        let modelId;
+        let objectIds;
+        let objectProperties;
+
+        function doPsets(){
+
+            dotConnect().then((WorkspaceAPI)=>{
+
+                WorkspaceAPI.viewer.getObjects().then((viewerObjects)=>{
+
+                    viewerObjects.forEach(modelObjectsSet => {
+                        
+                        modelId = modelObjectsSet['modelId']
+                        console.log('modelID: ')
+                        
+                        modelObjectsSet['objects'].forEach(modelObject => {
+
+                            WorkspaceAPI.viewer.getObjectProperties(modelId, [modelObjectsSet['modelId']]).then(objectProperties => {
+
+                                console.log('objectProps:')
+                                console.log(objectProperties)
+                            }).catch(err => {
+                                console.logg('catch: ', err)
+                            })
+                            
+
+                        })
+
+                    });
+
+                    let objects = viewerObjects[0]["objects"]
+                    //console.log(objects)
+                    //console.log(objects.length)
+
+
+                    
+                    for (let i = 0; i < objects.length; i++){
+                        console.log(i)
+                        console.log("YES")
+
+                        Promise.resolve(objects[i].properties).then((fetchedData)=>{
+                            console.log('then:', fetchedData)
+                        }).catch((err) => {
+                            console.error('catch:', err)
+                        })
+                            
+                        
+                        
+                        //getProperties(objects[i].properties)
+
+                        //console.log(objects[i].properties)
+                    }
+                    
+                    //console.log(viewerObjects.properties())
+
+                })
+
+            })
+
+            }
+
+        
+
+        function getObjectsColor(){
+
+            dotConnect().then((WorkspaceAPI)=>{
+
+                var objectSelector = {
+                        selected: true 
+                    }
+
+                var objectState = {
+                        color: {r:100, g:100,b:100,a:100},
+                        visible:true
+                    }
+
+
+                WorkspaceAPI.viewer.setObjectState(objectSelector, objectState).then(
+                        console.log("COLORED ALL")
+                    )
+
+
+        })}
+
+        function getSelectionData(){
+
+            let data = []
+
+            dotConnect().then((WorkspaceAPI)=>{
+                WorkspaceAPI.viewer.getSelection().then((selectionObjects)=>{
+                    console.log("RUN SELECTION OBJECTS")
+
+                    console.log(selectionObjects)
+
+                    selectionObjects.forEach(selectedModelObject =>{
+
+                        WorkspaceAPI.viewer.getObjectProperties(selectedModelObject.modelId, selectedModelObject.objectRuntimeIds).then((selectedObjectProperties)=>{
+
+                            console.log("SELECTED OBJECTS PROPERTIES")
+                            console.log(selectedObjectProperties)
+
+                            selectedObjectProperties.forEach(objectProperties =>{
+
+                                objectProperties.properties.forEach(objectPropertyset =>{
+
+                                    console.log('--Pset_Name: \t', objectPropertyset['name'])
+
+                                    objectPropertyset.properties.forEach(objectPropertysetProperty =>{
+
+                                        console.log('--- Prop: \t', objectPropertysetProperty['name'], ' = ', objectPropertysetProperty['value'])
+
+                                    })
+
+                                })
+
+                            })
+
+                        })
+
+                    })
+
+
+
+                    console.log(selectionObjects)
+
+                })
+            })
+        }
+
+        function getViewerModels() {
+            console.log("RUN VIEWER MODELS")
+            dotConnect().then((WorkspaceAPI) => {
+                WorkspaceAPI.viewer.getModels("loaded").then((modelSpecs) => {
+
+                    console.log(modelSpecs)
+
+                    for (let i = 0; i < modelSpecs.length; i++) {
+
+                        var model = modelSpecs[i]
+                        var modelId = model.id
+                        var modelName = model.name
+
+                        console.log(modelId)
+                        console.log(modelName)
+                    }
+
+
+                })
+
+                WorkspaceAPI.viewer.getObjects().then((modelObjects) => {
+                    
+                    console.log(modelObjects)
+                    
+                    for (let a = 0; a < modelObjects.length; a++){
+
+                        var modelID = modelObjects[a].modelId
+                        var mObjects = modelObjects[a].objects
+                        console.log(mObjects)
+
+                        for (let b = 0; b < mObjects.length; b++){
+
+                            console.log("**OBJECT**")
+                            var modelObject = mObjects[b]
+                            var objectClass = modelObject.class
+                            var objectId = modelObject.id
+                            var objectColor = modelObject.color
+
+                            WorkspaceAPI.viewer.getObjectProperties(modelID, [objectID])
+                            var objectProperties = modelObject.properties
+
+                            console.log("- " + objectId + "_" + objectClass + "_" + objectColor)
+                            console.log(objectProperties)
+                            
+                            for (let c = 0; c < objectProperties; c++){
+
+                                var propertySet = objectProperties[c]
+                                var propertySetName = propertySet.set
+                                var propertySetProperties = propertySet.properties
+
+                                console.log("-- " + propertySetName)
+
+                                for (let d = 0; d < propertySetProperties.length; d++){
+
+                                    var setProperty = propertySetProperties[d]
+                                    var setPropertyName = setProperty.name
+                                    var setPropertyType = setProperty.type
+                                    var setPropertyValue = setProperty.value
+
+                                    console.log("--- " + setPropertyType + "_" + setPropertyName + "_" + setPropertyValue)
+
+                                }
+
+                            }
+
+
+                        }
+
+
+                    }
+
+
+                })
+            })
+
+
+            return ""
+        }
+
+        function getObjects() {
+            console.log("RUN GET OBJECTS")
+
+            dotConnect().then((WorkspaceAPI) => {
+
+                WorkspaceAPI.viewer.getObjects().then((modelObjects) => {
+
+                    for (let a = 0; a < modelObjects.length; a++) {
+
+                        var modelObject = modelObjects[a]
+                        var modelId = modelObject.modelId
+
+
+
+                        var modelObjectsObjects = modelObject.objects
+
+                        console.log("MODEL ID = " + modelId)
+                        console.log(modelObjectsObjects)
+
+
+                        /*
+                        for (let b = 0; b < modelObjectsObjects.length; b++){
+
+                            var objectClass = modelObjectsObjects[b].class
+                            var objectId = modelObjectsObjects[b].id
+                            var objectColor = modelObjectsObjects[b].color
+                            var objectProperties = modelObjectsObjects[b].properties
+
+                            for (let c = 0; c < objectProperties.length; c++){
+
+                                var propertySetName = objectProperties[c].set
+                                var propertySetProperties = objectProperties[c].properties
+
+                                console.log("- " + propertySetName)
+                                
+                                for (let d = 0; d < propertySetProperties.length; d++){
+
+                                    var propertyName = propertySetProperties[d].name
+                                    var propertyType = propertySetProperties[d].type
+                                    var propertyValue = propertySetProperties[d].value
+
+                                    console.log("-- " + propertyName + " = " + propertyValue)
+
+                                }
+
+                            }
+
+                        }
+                        */
+
+                    }
+
+                })
+
+            })
+            return ""
+        }
+
+
+
+        dotConnect().then((WorkspaceAPI) => {
+
+            // Setting ui menu
+            WorkspaceAPI.ui.setMenu(mainMenuObject)
+
+            // Printing project info
+            WorkspaceAPI.project.getCurrentProject().then((projectInfo) => {
+
+                var pro = document.getElementById("project-info")
+                pro.innerHTML = JSON.stringify(projectInfo)
+                console.log(projectInfo)
+            })
+
+            // Getting 
+            WorkspaceAPI.extension.getPermission("accesstoken").then((accessToken) => {
+                //Current user access token or status: accessToken
+                var token = document.getElementById("access-token")
+                token.innerHTML = JSON.stringify(accessToken)
+                console.log(accessToken)
+
+            });
+
+            WorkspaceAPI.user.getUser().then((connectUser) => {
+                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
+            })
+
+            WorkspaceAPI.extension.getUser().then((connectUser) => {
+                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
+            })
+
+            console.log(300396)
+        })
+
+        console.log(22)
+
+
+
+    </script>
+
+    <!--<script type="module" src="./bundle.js"></script>-->
+</body>
