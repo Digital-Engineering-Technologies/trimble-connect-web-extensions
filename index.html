@@ -7,7 +7,7 @@
     <meta name="author" content="Oscar Jacobsen">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>OJ - TC-Addon</title>
+    <title>DET - TC-Addon</title>
     <link rel="icon" href="./favicon.png">
     <link rel="apple-touch-icon" href="./favicon.png">
     <link rel="manifest" href="./manifest.json">
@@ -17,29 +17,17 @@
 </head>
 
 <body>
-    <h1>Digital Engineering Technologies - TC-Extensions</h1>
-    <!--<input type="text" id="change">-->
+    <h2>Digital Engineering Technologies - TC-Extensions</h2>
     <label for="pwd">Your secret:</label>
     <input type="password" id="pwd" name="pwd">
-
     <script>
-        var paths;
-
         var pwdField = document.getElementById("pwd");
         pwdField.addEventListener("keydown", function (e) {
-
-            if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+            if (e.code === "Enter") {  
                 console.log("JIPPI")
-                paths = window.location.pathname.split("/")
-                console.log(pwdField.value)
-                paths[-1] = pwdField.value
-                window.location.pathname = paths.join("/");
-                console.log(window.location.pathname)
+                console.log(window.location.href)
+                window.location.href = '/' + pwdField.value
             }
         });
-        
-
     </script>
-
-    <!--<script type="module" src="./bundle.js"></script>-->
 </body>
