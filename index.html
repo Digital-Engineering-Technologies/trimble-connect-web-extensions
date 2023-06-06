@@ -21,6 +21,82 @@
     <label for="pwd">Your secret:</label>
     <input type="password" id="pwd" name="pwd">
     <script>
+
+        const mainMenuObject = {
+            title: "OJ - TC-Addon",
+            icon: "https://de-tech.no/trimble-connect-web-extensions/favicon.png",
+            command: "main_nav_menu_cliked",
+            subMenus: [
+                {
+                    title: "IFC-Tool",
+                    icon: "https://de-tech.no/trimble-connect-web-extensions/submenu_1.png",
+                    command: "submenu_1_clicked",
+                },
+                {
+                    title: "DWG-Tool",
+                    icon: "https://de-tech.no/trimble-connect-web-extensions/submenu_2.png",
+                    command: "submenu_2_clicked",
+                },
+            ],
+        };
+
+        async function dotConnect() {
+            return await TrimbleConnectWorkspace.connect(
+                window.parent,
+                (event, args) => {
+                    switch (event) {
+                        case "extension.command":
+                            //"Command executed by the user: args.data"
+                            break;
+                        case "extension.accessToken":
+                            //"Accestoken or status: args.data"
+                            break;
+                        case "extension.userSettingsChanged":
+                            //"User settings changed!"
+                            break;
+                        default:
+                    }
+                },
+                30000
+            );
+        }
+
+        dotConnect().then((WorkspaceAPI) => {
+
+            // Setting ui menu
+            WorkspaceAPI.ui.setMenu(mainMenuObject)
+
+            // Printing project info
+            WorkspaceAPI.project.getCurrentProject().then((projectInfo) => {
+
+                var pro = document.getElementById("project-info")
+                pro.innerHTML = JSON.stringify(projectInfo)
+                console.log(projectInfo)
+            })
+
+            // Getting 
+            WorkspaceAPI.extension.getPermission("accesstoken").then((accessToken) => {
+                //Current user access token or status: accessToken
+                var token = document.getElementById("access-token")
+                token.innerHTML = JSON.stringify(accessToken)
+                console.log(accessToken)
+
+            });
+
+            WorkspaceAPI.user.getUser().then((connectUser) => {
+                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
+            })
+
+            WorkspaceAPI.extension.getUser().then((connectUser) => {
+                document.getElementById("connect-user").innerHTML = JSON.stringify(connectUser)
+            })
+
+            console.log(300396)
+        })
+
+
+
+        // 
         var pwdField = document.getElementById("pwd");
         pwdField.addEventListener("keydown", function (e) {
             if (e.code === "Enter") {  
