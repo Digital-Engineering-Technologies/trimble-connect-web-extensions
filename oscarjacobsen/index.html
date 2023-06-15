@@ -35,6 +35,9 @@
     <button onclick="getObjectsColor()">getObjectsColor</button>
     <button onclick="doMmi20()">GO: MMI-2.0</button>
     <button onclick="doPsets()">GO: Psets</button>
+    <hr>
+    <h2>4D</h2>
+    <button onclick="">Visuell: MMI2.0-farger</button>
 
     <script>
         <!---->
@@ -88,6 +91,10 @@
             );
         }
 
+    
+
+
+        
         function setViewerTransparency(opacity) {
             dotConnect().then((WorkspaceAPI) => {
                 return WorkspaceAPI.viewer.setOpacity(50)
@@ -218,9 +225,32 @@
 
         })}
 
+        mmi_colour_enum = {
+            '000': (215,50,150),
+            '100': (190,40,35),
+            '125': (210,75,70),
+            '150': (225,120,115),
+            '175': (240,170,170),
+            '200': (230,150,55),
+            '225': (235,175,100),
+            '250': (240,200,140),
+            '275': (245,230,215),
+            '300': (250,240,80),
+            '325': (215,205,65),
+            '350': (185,175,60),
+            '375': (150,150,50),
+            '400': (55,130,70),
+            '425': (75,170,90),
+            '450': (100,195,125),
+            '475': (155,215,165),
+            '500': (30,70,175),
+            '600': (175,50,205)
+        }
+
         function getSelectionData(){
 
             let data = []
+            let mmi_rgb
 
             dotConnect().then((WorkspaceAPI)=>{
                 WorkspaceAPI.viewer.getSelection().then((selectionObjects)=>{
@@ -243,6 +273,13 @@
 
                                     objectPropertyset.properties.forEach(objectPropertysetProperty =>{
 
+                                        if (objectPropertysetProperty['name'].toLowerCase() == 'mmi'){
+
+                                            mmi_rgb = mmi_colour_enum[objectPropertysetProperty['value']]
+                                            console.log('MMI: ', objectPropertysetProperty['value'], ', RGB: ', mmi_rgb)
+
+                                        }
+                                        
                                         console.log('--- Prop: \t', objectPropertysetProperty['name'], ' = ', objectPropertysetProperty['value'])
 
                                     })
@@ -254,8 +291,6 @@
                         })
 
                     })
-
-
 
                     console.log(selectionObjects)
 
