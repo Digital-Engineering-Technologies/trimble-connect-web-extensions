@@ -19,7 +19,10 @@
 <body>
     <h2>Digital Engineering Technologies - TC-Extensions</h2>
     <label for="pwd">Your secret:</label>
-    <input type="password" id="pwd" name="pwd">
+    <form>
+        <input type="password" id="pwd" name="pwd">
+        <button type='submit'>Hit</button>
+    </form>
     <script>
         const mainMenuObject = {
             title: "DET - TC-Extensions",
@@ -98,8 +101,8 @@
         // 
         var pwdField = document.getElementById("pwd");
         pwdField.addEventListener("keydown", function (e) {
-            if (e.code === "Enter") {  
-                console.log("JIPPI")
+            if (e.code === "Enter" || e.keyCode == 13) {  
+                console.log("**Velkommen")
                 console.log(window.location.href)
                 window.location.href = './' + pwdField.value
             }
