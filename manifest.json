@@ -1,7 +1,7 @@
 {
-    "icon": "https://de-tech.no/trimble-connect-web-extensions/favicon.png",
+    "icon": "https://de-tech.io/trimble-connect-web-extensions/favicon.png",
     "title": "DET - TC-extensions",
-    "url": "https://de-tech.no/trimble-connect-web-extensions/index.html",
+    "url": "https://de-tech.io/trimble-connect-web-extensions/index.html",
     "description": "Extentions to vanilla Trimble Connect Web Viewer",
     "configCommand": "do_config",
     "enabled": false
